@@ -2,6 +2,10 @@
 
 source "$(dirname $0)/utils.sh"
 init
+if [ "${REPO}" != "monitors" ]; then
+    # Run this script only for monitors repo
+    exit 0
+fi
 echo "Check best practices respect"
 
 echo -e "\t- Check only one notify_no_data set to true per module"

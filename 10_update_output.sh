@@ -2,6 +2,10 @@
 
 source "$(dirname $0)/utils.sh"
 init
+if [ "${REPO}" != "monitors" ]; then
+    # Run this script only for monitors repo
+    exit 0
+fi
 echo "Generate terraform outputs.tf files for every monitors modules"
 
 # loop over every modules
