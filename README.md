@@ -40,8 +40,13 @@ Here is a list of scripts and their purpose:
 
 ## Usage
 
-After any change on this repo, you need to run the `./scripts/auto_update.sh [PATH_TO_MODULE]` command to make sure all is up to date otherwise the CI pipeline will fail:
+First, you need to retrieve `scripts` repository cloning submodules:
 
+```
+git submodule update --init
+```
+
+After any change on this repo, you need to run the `./scripts/auto_update.sh [PATH_TO_MODULE]` command to make sure all is up to date otherwise the CI pipeline will fail.
 The parameter is optional and it will limit the scripts execution on a specific path on the repository
 
 On linux system it is possible to run the script directly while `terraform`, `terraform-docs`, `terraform-config-inspect`, `jq` commands are available in your PATH.
