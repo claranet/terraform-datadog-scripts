@@ -79,22 +79,39 @@ for issue in $(cat $TMP_ISSUES); do
     # retrieve jira information from go-jira template
     IFS=';' read -r type issue status summary < <(jira --endpoint=${JIRA_ENDPOINT} --login=${JIRA_LOGIN} view $issue --template=changelog)
     # Ignore if issue is not in required status
-    if [[ "$JIRA_STATUS" == *"$status"* ]]; then
-        # add line for type only once
-        if ! grep -q "^## $type" $TMP_CHANGELOG; then 
-            echo -e "\n## $type\n" >> $TMP_CHANGELOG
+    if ! [[ "$JIRA_STATUS" == *"$status"* ]]; then
+        echo "Issue $issue with status \"$status\" not in [$JIRA_STATUS] ($summary)"
+        read -p 'Would you like to transition issue to "Done" status ? if no, the issue will be ignored ([y]/n): ' -r answer
+        if [[ "$answer" != "n" ]]; then
+            if [[ "$status" == "Qualif" ]]; then
+                jira --endpoint=${JIRA_ENDPOINT} --login=${JIRA_LOGIN} transition "Approve" $issue --noedit
+                status="To Do"
+            fi
+            if [[ "$status" == "To Do" ]]; then
+                jira --endpoint=${JIRA_ENDPOINT} --login=${JIRA_LOGIN} transition "In Progress" $issue --noedit
+                status="In Progress"
+            fi
+            if [[ "$status" == "In Progress" ]]; then
+                jira --endpoint=${JIRA_ENDPOINT} --login=${JIRA_LOGIN} transition "Review" $issue --noedit
+                status="In Review"
+            fi
+            if [[ "$status" == "In Review" ]]; then
+                jira --endpoint=${JIRA_ENDPOINT} --login=${JIRA_LOGIN} transition "Done" $issue --noedit
+            fi
         fi
-        # add jira issue line to changelog
-        echo "*   [[$issue](${JIRA_ENDPOINT}/browse/${issue})] - $summary" >> $TMP_CHANGELOG
-        echo $issue >> $TMP_ALLOWED_ISSUES
-    else
-        echo "Ignore $issue with status \"$status\" not in [$JIRA_STATUS] ($summary)"
     fi
+    # add line for type only once
+    if ! grep -q "^## $type" $TMP_CHANGELOG; then 
+        echo -e "\n## $type\n" >> $TMP_CHANGELOG
+    fi
+    # add jira issue line to changelog
+    echo "*   [[$issue](${JIRA_ENDPOINT}/browse/${issue})] - $summary" >> $TMP_CHANGELOG
+    echo $issue >> $TMP_ALLOWED_ISSUES
 done
 
 cat $TMP_CHANGELOG
 # Ask for confirmation to update changelog
-read -p 'Update CHANGELOG.md with this ? (y/n): ' -r answer
+read -p 'Update CHANGELOG.md with this ? (y/[n]): ' -r answer
 if [[ "$answer" == "y" ]]; then
     separator='\n'
     # Remove target tag changelog if already exist
@@ -107,7 +124,7 @@ if [[ "$answer" == "y" ]]; then
     echo -e "$(cat $TMP_CHANGELOG)${separator}$(cat CHANGELOG.md)" > CHANGELOG.md
 fi
 
-read -p "Close all issues and fix version $TAG_TARGET ? (y/n): " -r answer
+read -p "Close all issues and fix version $TAG_TARGET ? (y/[n]): " -r answer
 if [[ "$answer" == "y" ]]; then
     # Create version if does not exists
     one_issue=$(head -n 1 $TMP_ALLOWED_ISSUES)
@@ -116,7 +133,7 @@ if [[ "$answer" == "y" ]]; then
         curl -H "Authorization: Basic $auth_header" -H "Content-Type: application/json" -X POST -d "{\"name\": \"${TAG_TARGET}\",\"userReleaseDate\": \"$(echo -n $(LANG=eng date +'%-d/%b/%Y'))\",\"project\": \"$(echo -n $one_issue | cut -d'-' -f1)\",\"archived\": false,\"released\": true}" ${JIRA_ENDPOINT}/rest/api/latest/version
     fi
     for issue in $(cat $TMP_ALLOWED_ISSUES); do
-        jira --endpoint=${JIRA_ENDPOINT} --login=${JIRA_LOGIN} transition Close $issue
+        jira --endpoint=${JIRA_ENDPOINT} --login=${JIRA_LOGIN} transition "Close" $issue --noedit
         jira --endpoint=${JIRA_ENDPOINT} --login=${JIRA_LOGIN} edit $issue --template=fixversion --override fixVersions=${TAG_TARGET} --noedit
     done
 fi
