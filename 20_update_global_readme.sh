@@ -18,7 +18,7 @@ for path in $(find -mindepth 1 -type d ! -path '*/.*' ! -path './scripts*' -prin
         echo -en "\t" >> README.md
     done
     # add link to list of modules
-    echo -en "- [$(basename ${path})](https://git.fr.clara.net/claranet/pt-monitoring/projects/datadog/terraform/${REPO}/tree/master/" >> README.md
+    echo -en "- [$(basename ${path})](https://github.com/claranet/terraform-datadog-${REPO}/tree/master/" >> README.md
     # add path to link
     for directory in "${directories[@]}"; do
         echo -en "${directory}/" >> README.md
