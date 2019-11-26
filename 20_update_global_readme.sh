@@ -5,7 +5,7 @@ init
 echo "Update global README.md"
 
 # only keep current README from begining to "[Monitors/Integrations] summary" section (delete list)
-sed -i "/### ${REPO^} summary ###/q" README.md
+sed -i "/## ${REPO^} summary/q" README.md
 # add a newline after listing section
 echo >> README.md
 # loop over path of modules tree
