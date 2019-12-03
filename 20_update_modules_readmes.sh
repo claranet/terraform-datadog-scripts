@@ -36,7 +36,8 @@ for module in $(browse_modules "$(get_scope ${1:-})" "${REPO}-*.tf"); do
 
 \`\`\`
 module "datadog-${REPO}-${module_dash}" {
-  source = "git::ssh://git@github.com/claranet/terraform-datadog-${REPO}.git//${module_slash}?ref={revision}"
+  source = "claranet/${REPO}/datadog//${module_slash}"
+  version = "{revision}"
 EOF
 
     append=""
