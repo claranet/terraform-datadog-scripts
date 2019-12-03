@@ -42,7 +42,7 @@ EOF
 
     append=""
     list=""
-    last_argument="source"
+    last_argument="version"
     if [ "${REPO}" == "monitors" ]; then
         cat <<EOF >> README.md
 
@@ -86,7 +86,7 @@ EOF
     # if README already exist
     if [[ $EXIST -eq 1 ]]; then
         # take all custom config in declaration module example after last argument and until the end of block to restore it
-        sed -n "/^[[:space:]]*${last_argument}[[:space:]]*=.*/,/^\}/p" README.md.bak | tail -n +2 | head -n -1 >> README.md
+        awk "NR==1,/^[[:space:]]*${last_argument}[[:space:]]*=.*/{flag=1;next}/^}/{flag=0}flag" README.md.bak >> README.md
     fi
 
     # close block and generate the next until list of modules
