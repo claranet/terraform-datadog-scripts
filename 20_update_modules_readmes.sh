@@ -33,8 +33,8 @@ for module in $(browse_modules "$(get_scope ${1:-})" "${REPO}-*.tf"); do
 
 \`\`\`
 module "datadog-${REPO}-${module_dash}" {
-  source = "claranet/${REPO}/datadog//${module_slash}"
-  version = "{revision}"
+  source      = "claranet/${REPO}/datadog//${module_slash}"
+  version     = "{revision}"
 EOF
 
     append=""
