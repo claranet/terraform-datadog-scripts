@@ -31,7 +31,7 @@ for module in $(browse_modules "$(get_scope ${1:-})" "${REPO}-*.tf"); do
 
 ## How to use this module
 
-\`\`\`
+\`\`\`hcl
 module "datadog-${REPO}-${module_dash}" {
   source      = "claranet/${REPO}/datadog//${module_slash}"
   version     = "{revision}"
