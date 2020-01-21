@@ -33,7 +33,7 @@ function check_version() {
         req_ver=$(grep required_version README.md | awk '{print $4}')
         req_ver=${req_ver%'"'}
     elif [[ "$1" == "terraform-docs" ]]; then
-        req_ver="0.6.0"
+        req_ver="0.8.0"
         cur_ver=$(terraform-docs --version)
     else
         return 0
