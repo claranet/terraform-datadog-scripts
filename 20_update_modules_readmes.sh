@@ -4,9 +4,6 @@ source "$(dirname $0)/utils.sh"
 init
 echo "Update README.md for every ${REPO} modules"
 
-# download awk script to hack terraform-docs
-TERRAFORM_AWK="/tmp/terraform-docs.awk"
-curl -Lso ${TERRAFORM_AWK} "https://raw.githubusercontent.com/cloudposse/build-harness/master/bin/terraform-docs.awk"
 # this is the pattern from where custom information is saved to be restored
 PATTERN_DOC="Related documentation"
 
@@ -102,12 +99,8 @@ EOF
         echo -e "$(echo -e "${list}" | sort -fdbi)\n" >> README.md
     fi
 
-    # hack for terraform-docs with terraform 0.12 / HCL2 support
-    tmp_tf=$(mktemp -d)
-    awk -f ${TERRAFORM_AWK} ./*.tf > ${tmp_tf}/main.tf
     # auto generate terraform docs (inputs and outputs)
-    terraform-docs --with-aggregate-type-defaults md table ${tmp_tf}/ >> README.md
-    rm -fr ${tmp_tf}
+    terraform-docs --no-providers markdown ./ >> README.md
     # if README does not exist
     if [[ $EXIST -eq 0 ]]; then
         # Simply add empty documentation section
