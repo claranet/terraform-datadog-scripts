@@ -33,7 +33,12 @@ function check_version() {
         req_ver=$(grep required_version README.md | awk '{print $4}')
         req_ver=${req_ver%'"'}
     elif [[ "$1" == "terraform-docs" ]]; then
-        req_ver="0.8.0"
+        if [[ "$(grep terraform-docs README.md)" =~ [[:space:]]v([0-9]*\.[0-9]*\.[0-9]*).*\. ]]; then
+            req_ver="${BASH_REMATCH[1]}"
+        else
+            echo "impossible to retrieve required terraform-docs version from README"
+            exit 3
+        fi
         cur_ver=$(terraform-docs --version)
     else
         return 0
