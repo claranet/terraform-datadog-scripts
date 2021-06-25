@@ -50,16 +50,16 @@ After any change on this repo, you will need to run the `./scripts/auto_update.s
 The parameter is optional and it will limit the scripts execution on a specific path on the repository.
 
 On linux system it is possible to run the script directly while `terraform`, `terraform-docs`, `terraform-config-inspect`, `jq` commands are available in your `PATH`.
-Otherwise you can use [the same docker image as the CI](https://hub.docker.com/r/claranet/datadog-terraform) on every other platforms.
+Otherwise you can use [the same docker image as the CI](https://hub.docker.com/r/claranet/terraform-ci) on every other platforms.
 
 
 ```
 # if you already pulled the container once, you will need to update it
-$ docker pull claranet/datadog-terraform
+$ docker pull claranet/terraform-ci
 # then just need to run the script of your choice with optional path parameter or not
-$ docker run --rm -v "$PWD:/work" claranet/datadog-terraform /work/scripts/auto_update.sh
+$ docker run --rm -v "$PWD:/work" claranet/terraform-ci /work/scripts/auto_update.sh
 # else if you run docker in version >= 19.09 (or nightly builds) so you can do it both in one command
-$ docker run --pull=always --rm -v "$PWD:/work" claranet/datadog-terraform /work/scripts/auto_update.sh
+$ docker run --pull=always --rm -v "$PWD:/work" claranet/terraform-ci /work/scripts/auto_update.sh
 # it is also possible to run the scripts in debug in case of silent fail
-$ docker run -e GITLAB_CI=true --rm -v "$PWD:/work" claranet/datadog-terraform /work/scripts/auto_update.sh
+$ docker run -e GITLAB_CI=true --rm -v "$PWD:/work" claranet/terraform-ci /work/scripts/auto_update.sh
 ```
