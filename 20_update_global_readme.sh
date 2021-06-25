@@ -9,7 +9,7 @@ sed -i "/## ${REPO^} summary/q" README.md
 # add a newline after listing section
 echo >> README.md
 # loop over path of modules tree
-for path in $(find -mindepth 1 -type d ! -path '*/.*' ! -path './scripts*' -print | sort -fdbi); do
+for path in $(find -mindepth 1 -type d ! -path '*/.*' ! -path './scripts*' ! -path './common/module' -print | sort -fdbi); do
     # split path in directories
     directories=($(list_dirs $path))
     # loop over directories in path
