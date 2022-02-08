@@ -100,7 +100,7 @@ EOF
     fi
 
     # auto generate terraform docs (inputs and outputs)
-    terraform-docs markdown ./ >> README.md
+    terraform-docs markdown --lockfile=false . >> README.md
     # if README does not exist
     if [[ $EXIST -eq 0 ]]; then
         # Simply add empty documentation section
