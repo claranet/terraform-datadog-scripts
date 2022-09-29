@@ -102,7 +102,7 @@ EOF
     echo "<!-- BEGIN_TF_DOCS -->" >> README.md
     echo "<!-- END_TF_DOCS -->" >> README.md
     # auto generate terraform docs (inputs and outputs)
-    terraform-docs markdown --lockfile=false . README.md
+    terraform-docs markdown --lockfile=false . --output-file README.md
     # if README does not exist
     if [[ $EXIST -eq 0 ]]; then
         # Simply add empty documentation section
