@@ -56,7 +56,9 @@ function get_name() {
     if [[ "${name}" =~ ^(.*)[[:space:]]\{\{#is_alert\}\}.*$ ]]; then
         name="${BASH_REMATCH[1]}"
     fi
+    if [[ "${name}" =~ ^.*(\$\{.*\}).*$ ]]; then
+        name="${BASH_REMATCH[1]}"
+    fi
     echo $name
     return 0
 }
-
